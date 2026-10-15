@@ -1,0 +1,42 @@
+name: "Automated PR Code Review"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  code-review:
+    name: "AI & Security Code Review"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Tüm commit geçmişi ve dalların çekilmesi için şarttır
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: "Run Code Review Bot"
+        id: review
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+          GITHUB_STEP_SUMMARY: ${{ env.GITHUB_STEP_SUMMARY }}
+        run: |
+          echo "Base branch: origin/${{ github.base_ref }}"
+          echo "Head commit: HEAD"
+          
+          python3 scripts/code_review.py \
+            --base origin/${{ github.base_ref }} \
+            --head HEAD \
+            --fail-on-critical
