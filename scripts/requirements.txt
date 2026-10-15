@@ -1,0 +1,8 @@
+# Kod İnceleme Botu için Bağımlılıklar (Dependencies)
+# Not: Bot, harici kütüphane gerektirmeyen standart Python 3 kütüphaneleri (urllib, json, re, subprocess, argparse)
+# ile çalışacak şekilde optimize edilmiştir. Bu sayede GitHub Actions ortamında ekstra paket indirme beklemeden
+# sıfır gecikmeyle çalışır.
+#
+# İsteğe bağlı geliştirme ve test kütüphaneleri:
+pytest>=8.0.0
+flake8>=7.0.0
